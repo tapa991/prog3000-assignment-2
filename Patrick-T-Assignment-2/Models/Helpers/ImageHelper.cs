@@ -6,8 +6,8 @@ namespace Patrick_T_Assignment_2.Models.Helpers
     {
         public static IEnumerable<string> GetTags(string imageUrl)
         {
-            string apiKey = "copy your api key here";
-            string apiSecret = "copy your api secret here";
+            string apiKey = "acc_96fc18d2b017bb2";
+            string apiSecret = "99f14532335c0826369e27feba977e4d";
 
             string basicAuthValue = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(String.Format("{0}:{1}", apiKey, apiSecret)));
 
