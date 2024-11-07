@@ -1,7 +1,4 @@
 
-using Microsoft.EntityFrameworkCore;
-using Patrick_T_Assignment_2.Data;
-
 namespace Patrick_T_Assignment_2
 {
     public class Program
@@ -13,8 +10,6 @@ namespace Patrick_T_Assignment_2
             // Add services to the container.
 
             builder.Services.AddControllers();
-            builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite(builder.Configuration.GetConnectionString("AppDatabase")));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
