@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Patrick_T_Assignment_2.Data;
 using Patrick_T_Assignment_2.Models.DTOs;
 using Patrick_T_Assignment_2.Models.Entities;
+using Patrick_T_Assignment_2.Models.Helpers;
 
 namespace Patrick_T_Assignment_2.Controllers
 {
@@ -52,6 +54,52 @@ namespace Patrick_T_Assignment_2.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+        }
+
+        [HttpPost("{id}/image")]
+        public async Task<IActionResult> AddImageToUser(Guid id, [FromBody] string imageUrl)
+        {
+            // Find the user by ID
+            var user = await _context.Users.Include(u => u.Images).FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Create a new image object
+            var image = new Image
+            {
+                Id = Guid.NewGuid(),
+                Url = imageUrl,
+                PostingDate = DateTime.UtcNow,
+                User = user,
+                Tags = new List<Tag>() // Initialize an empty list for tags
+            };
+
+            var tags = ImageHelper.GetTags(imageUrl);
+            List<Tag> tagObjects = tags.Select(tagName => new Tag 
+            {
+                Id = Guid.NewGuid(),
+                Text = tagName,
+                Images = new List<Image>()
+            }).ToList();
+
+            foreach (var tag in tagObjects)
+            {
+                // Check if the tag already exists in the database by its Text (or Name)
+                if (!_context.Tags.Any(t => t.Text == tag.Text))
+                {
+                    // If the tag doesn't exist, add it
+                    _context.Tags.Add(tag);
+                }
+            }
+
+            _context.Images.Add(image);
+
+            // Save the changes to the database
+            await _context.SaveChangesAsync();
+
+            return Ok(image.Url);
         }
 
         // Helper method to validate email format
