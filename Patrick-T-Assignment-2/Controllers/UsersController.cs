@@ -102,6 +102,24 @@ namespace Patrick_T_Assignment_2.Controllers
             return Ok(image.Url);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {
+            var user = await _context.Users
+                                     .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found" });
+            }
+
+            // Remove the user from the database
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "User deleted successfully" });
+        }
+
         // Helper method to validate email format
         private bool IsValidEmail(string email)
         {
