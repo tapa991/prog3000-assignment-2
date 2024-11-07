@@ -4,9 +4,8 @@
     {
         public Guid Id { get; set; }
         public string Url { get; set; }
-        public DateTime PostingDate { get; set; }
-        public Guid UserId { get; set; }  // Foreign key for User
         public User User { get; set; }
-        public List<Tag> Tags { get; set; } = new List<Tag>();
+        public DateTime PostingDate { get; set; }
+        public List<Tag> Tags { get; set; }
     }
 }
