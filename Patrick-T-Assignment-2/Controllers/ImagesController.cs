@@ -27,5 +27,23 @@ namespace Patrick_T_Assignment_2.Controllers
             // Return a 200 OK response with the list of images
             return Ok(images);
         }
+
+        // GET: api/images/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Image>> GetImageById(Guid id)
+        {
+            // Retrieve the image by ID, including tags if needed
+            var image = await _context.Images
+                                       .FirstOrDefaultAsync(i => i.Id == id);
+
+            // If the image is not found, return 404
+            if (image == null)
+            {
+                return NotFound(new { Message = "Image not found" });
+            }
+
+            // Return the image if found
+            return Ok(image);
+        }
     }
 }
